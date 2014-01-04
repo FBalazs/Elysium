@@ -5,6 +5,7 @@ import java.io.File;
 import hd.elysium.block.ElysianBlock;
 import hd.elysium.block.ElysianGrass;
 import hd.elysium.block.ElysianPortal;
+import hd.elysium.item.ElysianCristal;
 import hd.elysium.item.ItemDebug;
 import hd.elysium.item.ElysianItem;
 import hd.elysium.proxy.CommonProxy;
@@ -13,6 +14,7 @@ import hd.elysium.world.ElysiumWorldProvider;
 import hd.elysium.world.biome.ElysianBiome;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -46,7 +48,8 @@ public class Elysium
 	public static ElysianCreativeTab tabBlocks,
 									tabItems;
 	
-	public static ElysianItem itemDebug;
+	public static ElysianItem itemDebug,
+								itemCristal;
 	
 	public static ElysianBlock blockDirt,
 								blockGrass,
@@ -66,6 +69,10 @@ public class Elysium
 			itemDebug.setCreativeTab(tabItems);
 			itemDebug.addNameTranslation("en_US", "Debug Item");
 		
+		itemCristal = new ElysianCristal(config.getItem("cristal", DefaultProperties.itemCristalId).getInt(), "cristal");
+			itemCristal.setCreativeTab(tabItems);
+			itemCristal.addNameTranslation("en_US", "Elysian Cristal");
+		
 		tabItems.setItemStack(new ItemStack(Item.appleGold));
 	}
 	
@@ -75,7 +82,7 @@ public class Elysium
 		tabBlocks.addNameTranslation("en_US", "Elysium Blocks");
 		
 		blockDirt = new ElysianBlock(config.getTerrainBlock("block", "dirt", DefaultProperties.blockDirtId, null).getInt(), "dirt", Material.ground);
-			blockDirt.setHardness(0.5F);
+			blockDirt.setHardness(1F);
 			blockDirt.setHarvestLevel("shovel", 0);
 			blockDirt.setStepSound(Block.soundGravelFootstep);
 			blockDirt.setCreativeTab(tabBlocks);
@@ -83,7 +90,7 @@ public class Elysium
 		blockDirt.register();
 		
 		blockGrass = new ElysianGrass(config.getTerrainBlock("block", "grass", DefaultProperties.blockGrassId, null).getInt(), "grass", Material.grass);
-			blockGrass.setHardness(0.6F);
+			blockGrass.setHardness(1.2F);
 			blockGrass.setHarvestLevel("shovel", 0);
 			blockGrass.setStepSound(Block.soundGrassFootstep);
 			blockGrass.setIdDropped(blockDirt.blockID);
@@ -92,8 +99,8 @@ public class Elysium
 		blockGrass.register();
 		
 		blockPalestone = new ElysianBlock(config.getTerrainBlock("block", "palestone", DefaultProperties.blockPalestoneId, null).getInt(), "palestone", Material.rock);
-			blockPalestone.setHardness(2F);
-			blockPalestone.setResistance(12.5F);
+			blockPalestone.setHardness(3F);
+			blockPalestone.setResistance(20F);
 			blockPalestone.setHarvestLevel("pickaxe", 1);
 			blockPalestone.setStepSound(Block.soundStoneFootstep);
 			blockPalestone.setCreativeTab(tabBlocks);
@@ -101,13 +108,11 @@ public class Elysium
 		blockPalestone.register();
 		
 		blockPortal = new ElysianPortal(config.getBlock("portal", DefaultProperties.blockPortalId).getInt(), "portal", Material.rock);
-			blockPortal.setHardness(0.8F);
-			blockPortal.setStepSound(Block.soundStoneFootstep);
-			blockPortal.setHarvestLevel("pickaxe", 1);
-			blockPortal.setCreativeTab(tabBlocks);
 		blockPortal.register();
 		
-		tabBlocks.setItemStack(new ItemStack(blockDirt));
+		Block.dragonEgg.setCreativeTab(CreativeTabs.tabMisc);
+		
+		tabBlocks.setItemStack(new ItemStack(blockGrass));
 	}
 	
 	public void registerTileEntities()
@@ -127,6 +132,7 @@ public class Elysium
 		config = new Configuration(new File(event.getModConfigurationDirectory(), "/elysium/config.cfg"));
 		config.load();
 		
+		TileEntityPortal.ticksBetweenChecks = config.get("performance", "timeBetweenPortalChecks", 5).getInt();
 		dimensionId = config.get("dimension", "id", DefaultProperties.dimensionId).getInt();
 		this.addItems();
 		this.addBlocks();

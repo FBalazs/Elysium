@@ -4,7 +4,8 @@ public class DefaultProperties
 {
 	public static final int dimensionId = 23;
 	
-	public static final int itemDebugId = 5000;
+	public static final int itemDebugId = 5000,
+							itemCristalId = 5001;
 	
 	public static final int blockDirtId = 200,
 							blockGrassId = 201,

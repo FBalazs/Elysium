@@ -56,7 +56,12 @@ public class ElysiumTeleporter extends Teleporter
 				{
 					Block block = Block.blocksList[this.worldServer.getBlockId(i, j, k)];
 					if(block == null || block.canBeReplacedByLeaves(this.worldServer, i, j, k))
-						this.worldServer.setBlock(i, j, k, (int)this.worldServer.getBiomeGenForCoords(i, k).fillerBlock & 256);
+					{
+						int f = (int)this.worldServer.getBiomeGenForCoords(i, k).fillerBlock;
+						if(f < 0)
+							f += 256;
+						this.worldServer.setBlock(i, j, k, f);
+					}
 				}
 		
 		for(int i = x-2; i <= x+2; i++)
@@ -85,19 +90,19 @@ public class ElysiumTeleporter extends Teleporter
 	}
 	
 	@Override
-	public void placeInPortal(Entity entity, double unused1, double unused2, double unused3, float unused4)
+	public void placeInPortal(Entity entity, double px, double py, double pz, float pitch)
 	{
-		int x = (int)Math.floor(entity.posX);
-		int z = (int)Math.floor(entity.posZ);
-		int y = this.getPortalHeight(x, z);
-		if(y == -1)
+		int x = (int)Math.floor(px);
+		int z = (int)Math.floor(pz);
+		int y = this.getPortalHeight(x, z)-8;
+		if(y < 0)
 		{
 			for(y = 32; y < 128 && !this.canPlacePortalAt(x, y, z); y++);
 			this.placePortalAt(x, y, z);
 		}
 		double d = this.worldServer.rand.nextDouble()*Math.PI*2;
-		entity.posX = x+Math.cos(d)*1.5;
-		entity.posZ = z-Math.sin(d)*1.5;
+		entity.posX = x+0.5D+Math.cos(d)*1.5;
+		entity.posZ = z+0.5D+Math.sin(d)*1.5;
 		entity.posY = y+8;
 	}
 }

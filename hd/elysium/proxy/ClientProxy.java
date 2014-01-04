@@ -13,7 +13,7 @@ public class ClientProxy extends CommonProxy
 	{
 		ElysianPortal.renderId = RenderingRegistry.getNextAvailableRenderId();
 		
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPortal.class, new RenderPortal(Elysium.config.get("render", "beamPoligons", 16).getInt()));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPortal.class, new RenderPortal(Elysium.config.get("performance", "beamPoligons", 32).getInt()));
 	}
 	
 	@Override
